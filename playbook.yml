@@ -1,0 +1,20 @@
+---
+- hosts: webservers
+  become: yes
+  tasks: 
+#    - name: remove httpd
+#      service:
+#        name: httpd
+#        state: stopped
+    - name: intsall nginx
+      apt: 
+        name: nginx
+        state: present
+    - name: start nginx service
+      service:
+        state: started
+        name: nginx
+    - name: copy html
+      copy: 
+        src: files/index.html
+        dest: /var/www/html/index.html

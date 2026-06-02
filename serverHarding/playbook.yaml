@@ -1,0 +1,46 @@
+---
+- hosts: webservers
+  become: yes
+  tasks: 
+    - name: deny all firewall
+      ufw:
+        default: deny
+    - name: allow port ssh
+      ufw:
+        rule: allow
+        port: ssh
+    - name: allow port 80
+      ufw: 
+        rule: allow
+        port: 80
+    - name: activate firewall
+      ufw:
+        state: enabled
+    - name: deactivate password authentication 
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '#PasswordAuthentication yes'
+        line: PasswordAuthentication no
+      notify: restart ssh
+    - name: deactivate root
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '#PermitRootLogin prohibit-password'
+        line: PermitRootLogin no
+      notify: restart ssh
+    - name: max auth tries lower
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '#MaxAuthTries 6'
+        line: MaxAuthTries 3
+      notify: restart ssh
+  handlers:
+    - name: restart ssh
+      service:
+        state: restarted
+        name: ssh
+
+
+
+
+       

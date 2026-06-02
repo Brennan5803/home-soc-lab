@@ -1,0 +1,3 @@
+---
+- import_playbook: serverHarding/playbook.yaml
+- import_playbook: ansible-waxuh/wazuh-playbook.yaml
